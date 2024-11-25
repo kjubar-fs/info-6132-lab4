@@ -1,20 +1,35 @@
+/*
+ *  Author: Kaleb Jubar
+ *  Created: 26 Oct 1985, 4:15:00 AM
+ *  Last update: 25 Nov 2024, 4:15:45 PM
+ *  Copyright (c) 1985 - 2024 Kaleb Jubar
+ */
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+import { DefaultTheme, NavigationContainer, Theme } from '@react-navigation/native';
+
+import { AppScreen } from './src/screens/AppScreen';
+
+import { primaryColor } from './src/util/constants';
+
+// create a custom theme for React Navigation
+const BooksTheme: Theme = {
+    ...DefaultTheme,
+    colors: {
+        ...DefaultTheme.colors,
+        primary: primaryColor,
+        background: "#FEFEFE",
+    },
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+    return (
+        <NavigationContainer theme={BooksTheme}>
+
+            <StatusBar style="light" />
+
+            <AppScreen />
+
+        </NavigationContainer>
+    );
+}
