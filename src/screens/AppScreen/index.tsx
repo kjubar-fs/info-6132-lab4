@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
- *  Created: 6 Nov 2024, 9:47:58 AM
- *  Last update: 25 Nov 2024, 4:19:09 PM
+ *  Created: 25 Nov 2024, 3:43:02 PM
+ *  Last update: 25 Nov 2024, 6:11:03 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { Platform } from "react-native";
@@ -31,7 +31,7 @@ export function AppScreen(): JSX.Element {
             }}
         >
             <Tab.Screen
-                name="Home"
+                name="All Events"
                 component={HomeScreen}
                 options={{
                     tabBarIcon: ({ color, size }): JSX.Element => (
