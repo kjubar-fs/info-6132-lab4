@@ -1,14 +1,16 @@
 /*
  *  Author: Kaleb Jubar
- *  Created: 6 Nov 2024, 11:00:26 AM
- *  Last update: 26 Nov 2024, 1:04:10 PM
+ *  Created: 25 Nov 2024, 3:43:02 PM
+ *  Last update: 26 Nov 2024, 3:25:27 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
-import { Text, TouchableOpacity } from "react-native";
+import { Text, TouchableHighlight, View } from "react-native";
 
 import { Event } from "../../data/firebase/config";
 
 import { GenericModal } from "../../components/common/GenericModal";
+
+import styles from "./styles";
 
 interface Props {
     /** Whether or not the modal is shown */
@@ -20,12 +22,37 @@ interface Props {
 }
 
 export function EventDetailScreen({ visible, close, event }: Props): JSX.Element {
+    // format event date/time for display
+    const eventTime = event.startInstant.toDate();
+    const dateStr = eventTime.toLocaleDateString("en-CA", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
+    const timeStr = eventTime.toLocaleTimeString("en-CA", {
+        hour: "numeric",
+        minute: "2-digit",
+    });
+
     return (
-        <GenericModal visible={visible}>
-            <Text>Event details here</Text>
-            <TouchableOpacity onPress={close}>
-                <Text>Close</Text>
-            </TouchableOpacity>
+        <GenericModal visible={visible} cardStyles={styles.container}>
+            <View style={styles.containerTitle}>
+                <Text style={styles.title}>{event.title}</Text>
+
+                <TouchableHighlight style={styles.cancelBtn} onPress={close} underlayColor="#D00">
+                    <Text style={styles.cancelX}>X</Text>
+                </TouchableHighlight>
+            </View>
+
+            <Text style={styles.location}>{event.location}</Text>
+
+            <View style={styles.containerDateTime}>
+                <Text style={styles.dateTime}>{dateStr}</Text>
+                <Text style={styles.dateTime}>{timeStr}</Text>
+            </View>
+
+            <Text style={styles.description}>{event.description}</Text>
         </GenericModal>
     );
 }
