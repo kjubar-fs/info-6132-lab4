@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 11:43:08 PM
- *  Last update: 26 Nov 2024, 10:07:49 AM
+ *  Last update: 26 Nov 2024, 12:50:14 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { configureStore } from "@reduxjs/toolkit";
@@ -14,6 +14,11 @@ export const store = configureStore({
         events: eventsReducer,
         favorites: favoritesReducer,
     },
+    middleware: (getDefaultMiddleware) => (
+        getDefaultMiddleware({
+            serializableCheck: false,
+        })
+    ),
 });
 
 // export Redux typings
