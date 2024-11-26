@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 6:57:13 PM
- *  Last update: 26 Nov 2024, 1:37:04 PM
+ *  Last update: 26 Nov 2024, 2:09:32 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useEffect, useState } from "react";
@@ -125,7 +125,7 @@ function LoginScreen(): JSX.Element {
         // check if email is valid
         let emailValid = false;
         if (!email) {
-            setEmailError("Email is required");
+            setEmailError("Required");
         } else if (!validateEmail(email)) {
             setEmailError("Email format is invalid");
         } else {
@@ -135,7 +135,7 @@ function LoginScreen(): JSX.Element {
         // check if password is valid
         let passwordValid = false;
         if (!password) {
-            setPasswordError("Password is required");
+            setPasswordError("Required");
         } else {
             passwordValid = true;
         }
