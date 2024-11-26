@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 7:26:19 PM
- *  Last update: 26 Nov 2024, 1:03:18 PM
+ *  Last update: 26 Nov 2024, 2:47:46 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { Modal, StyleProp, View, ViewStyle } from "react-native";
@@ -24,6 +24,7 @@ export function GenericModal({ children, visible, cardStyles }: Props): JSX.Elem
         <Modal
             visible={visible}
             transparent
+            animationType="fade"
         >
             <View style={styles.background}>
                 <Card style={[styles.card, cardStyles]}>
