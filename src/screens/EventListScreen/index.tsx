@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 3:43:02 PM
- *  Last update: 25 Nov 2024, 6:11:18 PM
+ *  Last update: 25 Nov 2024, 7:04:53 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { Text, TouchableOpacity } from "react-native";
@@ -24,11 +24,13 @@ export function EventListScreen(): JSX.Element {
     };
 
     return (
-        <ScreenWrapper>
+        // <ScreenWrapper>
+        <>
             <Text>Event list here</Text>
             <TouchableOpacity onPress={() => navigation.navigate("eventDetail", { event: fakeEvent })}>
                 <Text>Go to detail</Text>
             </TouchableOpacity>
-        </ScreenWrapper>
+        </>
+        // </ScreenWrapper>
     );
 }

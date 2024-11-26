@@ -1,14 +1,14 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 26 Oct 1985, 4:15:00 AM
- *  Last update: 25 Nov 2024, 5:59:47 PM
+ *  Last update: 25 Nov 2024, 7:00:57 PM
  *  Copyright (c) 1985 - 2024 Kaleb Jubar
  */
 import { StatusBar } from 'expo-status-bar';
 
 import { DefaultTheme, NavigationContainer, Theme } from '@react-navigation/native';
 
-import { AppScreen } from './src/screens/AppScreen';
+import { LoginStack } from './src/screens/LoginScreen';
 
 import { accentColor, primaryColor } from './src/util/constants';
 
@@ -29,7 +29,7 @@ export default function App() {
 
             <StatusBar style="light" />
 
-            <AppScreen />
+            <LoginStack />
 
         </NavigationContainer>
     );
