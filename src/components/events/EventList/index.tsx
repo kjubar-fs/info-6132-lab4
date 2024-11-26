@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
- *  Created: 29 Oct 2024, 1:48:36 PM
- *  Last update: 26 Nov 2024, 3:47:50 PM
+ *  Created: 26 Nov 2024, 3:30:44 PM
+ *  Last update: 26 Nov 2024, 3:55:25 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { View, FlatList, Text } from "react-native";
