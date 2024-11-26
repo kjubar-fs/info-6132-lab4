@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 6:57:13 PM
- *  Last update: 26 Nov 2024, 1:16:43 PM
+ *  Last update: 26 Nov 2024, 1:28:37 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useEffect, useState } from "react";
@@ -149,8 +149,8 @@ function LoginScreen(): JSX.Element {
         signInWithEmailAndPassword(auth, email ?? "", password ?? "")
             .then(() => {
                 // clear fields
-                setEmail("");
-                setPassword("");
+                setEmail(undefined);
+                setPassword(undefined);
 
                 // don't need to call navigate here, the onAuthStateChanged handler will do that for us
             })
