@@ -1,14 +1,24 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 26 Nov 2024, 1:00:55 PM
- *  Last update: 26 Nov 2024, 2:02:36 PM
+ *  Last update: 26 Nov 2024, 2:43:01 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useEffect, useState } from "react";
 
 import { Text, View, TextInput, TouchableHighlight } from "react-native";
 
+import { FirebaseError } from "firebase/app";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../data/firebase/config";
+
+import Toast from "react-native-root-toast";
+
+import { createFavoritesList } from "../../data/firebase/write";
+
 import { GenericModal } from "../../components/common/GenericModal";
+
+import { validateEmail } from "../../util/functions";
 
 import styles from "./styles";
 
@@ -74,6 +84,68 @@ export function CreateAccountScreen({ visible, close }: Props): JSX.Element {
             setPasswordVerifyError("");
         }
     };
+    
+    const createAccount = () => {
+        // check if email is valid
+        let emailValid = false;
+        if (!email) {
+            setEmailError("Required");
+        } else if (!validateEmail(email)) {
+            setEmailError("Email format is invalid");
+        } else {
+            emailValid = true;
+        }
+
+        // check if password is valid
+        let passwordValid = false;
+        if (!password) {
+            setPasswordError("Required");
+        } else if (password.length < 6) {
+            setPasswordError("Must be at least 6 characters");
+        } else {
+            passwordValid = true;
+        }
+
+        // check confirm password matches password
+        let passwordVerifyValid = false;
+        if (!passwordVerify) {
+            setPasswordVerifyError("Required");
+        } else if (password !== passwordVerify) {
+            setPasswordVerifyError("Must match");
+        } else {
+            passwordVerifyValid = true;
+        }
+
+        // do nothing if basic validation checks failed
+        if (!emailValid || !passwordValid || !passwordVerifyValid) {
+            return;
+        }
+
+        // attempt Firebase account creation
+        createUserWithEmailAndPassword(auth, email ?? "", password ?? "")
+            .then((credential) => {
+                // close the modal
+                close();
+
+                // create an empty favorites list for the user on the DB
+                // don't need to wait for the result
+                createFavoritesList(credential.user.uid);
+
+                // show a toast after reaching the home screen
+                // createUserWithEmailAndPassword automatically authenticates, so we are auto-logged in
+                setTimeout(() => {
+                    Toast.show("Account successfully created!", {
+                        duration: Toast.durations.LONG,
+                        position: -100,
+                    });
+                }, 1000);
+            })
+            .catch((error: FirebaseError) => {
+                Toast.show(`Unknown error creating account: ${error.message}. Try again later.`, {
+                    duration: Toast.durations.LONG,
+                });
+            });
+    };
 
     return (
         <GenericModal visible={visible} cardStyles={styles.container}>
@@ -87,7 +159,7 @@ export function CreateAccountScreen({ visible, close }: Props): JSX.Element {
                 </View>
 
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, emailError ? styles.inputHasError : undefined]}
                     value={email}
                     onChangeText={changeEmail}
                     keyboardType="email-address"
@@ -105,7 +177,7 @@ export function CreateAccountScreen({ visible, close }: Props): JSX.Element {
                 </View>
                 
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, passwordError ? styles.inputHasError : undefined]}
                     value={password}
                     onChangeText={changePassword}
                     autoComplete="new-password"
@@ -123,7 +195,7 @@ export function CreateAccountScreen({ visible, close }: Props): JSX.Element {
                 </View>
                 
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, passwordVerifyError ? styles.inputHasError : undefined]}
                     value={passwordVerify}
                     onChangeText={changePasswordVerify}
                     autoComplete="new-password"
@@ -138,7 +210,7 @@ export function CreateAccountScreen({ visible, close }: Props): JSX.Element {
                     <Text style={styles.btnCaption}>Cancel</Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight style={[styles.button, styles.signUpBtn]} onPress={() => console.log("create")} underlayColor="#0D0">
+                <TouchableHighlight style={[styles.button, styles.signUpBtn]} onPress={createAccount} underlayColor="#0D0">
                     <Text style={styles.btnCaption}>Sign Up</Text>
                 </TouchableHighlight>
             </View>
