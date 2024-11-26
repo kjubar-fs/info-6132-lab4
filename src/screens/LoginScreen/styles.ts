@@ -1,12 +1,12 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 7:57:27 PM
- *  Last update: 25 Nov 2024, 9:11:11 PM
+ *  Last update: 25 Nov 2024, 10:54:49 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { StyleSheet } from "react-native";
 
-import { accentColor, primaryColor, safeAreaPadding } from "../../util/constants";
+import { primaryColor, safeAreaPadding } from "../../util/constants";
 
 export default StyleSheet.create({
     containerOuter: {
@@ -27,7 +27,12 @@ export default StyleSheet.create({
 
     containerInput: {
         minWidth: "75%",
-        gap: 5,
+        gap: 8,
+    },
+
+    containerCaption: {
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
 
     title: {
@@ -38,8 +43,17 @@ export default StyleSheet.create({
     },
 
     caption: {
+        padding: 2,
         fontSize: 17,
         color: "white",
+    },
+    
+    error: {
+        padding: 2,
+        fontSize: 17,
+        backgroundColor: "white",
+        color: "#D00",
+        borderRadius: 4,
     },
 
     input: {
@@ -64,6 +78,11 @@ export default StyleSheet.create({
     loginText: {
         fontSize: 18,
         fontWeight: "500",
-        color: accentColor,
+    },
+
+    logoutText: {
+        fontSize: 18,
+        color: "white",
+        fontWeight: "500",
     },
 });
