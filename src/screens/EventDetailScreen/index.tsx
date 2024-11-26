@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 3:43:02 PM
- *  Last update: 26 Nov 2024, 3:25:27 PM
+ *  Last update: 26 Nov 2024, 3:42:02 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { Text, TouchableHighlight, View } from "react-native";
@@ -18,10 +18,24 @@ interface Props {
     /** Function to call to close the modal */
     close: () => void,
     /** Event to display details for */
-    event: Event,
+    event?: Event,
 }
 
 export function EventDetailScreen({ visible, close, event }: Props): JSX.Element {
+    if (event === undefined) {
+        return (
+            <GenericModal visible={visible}>
+                <View style={styles.containerTitle}>
+                    <Text style={styles.title}>No event found!</Text>
+
+                    <TouchableHighlight style={styles.cancelBtn} onPress={close} underlayColor="#D00">
+                        <Text style={styles.cancelX}>X</Text>
+                    </TouchableHighlight>
+                </View>
+            </GenericModal>
+        );
+    }
+
     // format event date/time for display
     const eventTime = event.startInstant.toDate();
     const dateStr = eventTime.toLocaleDateString("en-CA", {
