@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 26 Nov 2024, 3:30:44 PM
- *  Last update: 26 Nov 2024, 3:55:34 PM
+ *  Last update: 26 Nov 2024, 4:21:55 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { View, Text, TouchableHighlight } from "react-native";
@@ -47,13 +47,13 @@ export function EventListItem({ event, onPress }: Props) {
                     <Text style={styles.title}>
                         {event.title}
                     </Text>
-
-                    <Text style={styles.detail}>
-                        {timeStr}, {dateStr}
-                    </Text>
                     
                     <Text style={styles.location}>
                         {event.location}
+                    </Text>
+
+                    <Text style={styles.detail}>
+                        {timeStr}, {dateStr}
                     </Text>
                 </View>
 
