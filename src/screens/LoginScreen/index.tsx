@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 6:57:13 PM
- *  Last update: 25 Nov 2024, 10:54:21 PM
+ *  Last update: 25 Nov 2024, 11:19:37 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useEffect, useState } from "react";
@@ -86,6 +86,7 @@ function LoginScreen(): JSX.Element {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             // we have a user, so just go ahead and move to the app screen
             if (user) {
+                // use "as never" as a little hack so we don't have to set up a param list
                 navigation.navigate("app" as never);
             }
         });
@@ -149,9 +150,7 @@ function LoginScreen(): JSX.Element {
                 setEmail("");
                 setPassword("");
 
-                // navigate into the app
-                // use "as never" as a little hack so we don't have to set up a param list
-                navigation.navigate("app" as never);
+                // don't need to call navigate here, the onAuthStateChanged handler will do that for us
             })
             .catch((error: FirebaseError) => {
                 if (error.code === "auth/invalid-credential") {
