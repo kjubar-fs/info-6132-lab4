@@ -1,9 +1,12 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 26 Oct 1985, 4:15:00 AM
- *  Last update: 25 Nov 2024, 10:25:26 PM
+ *  Last update: 26 Nov 2024, 12:42:36 PM
  *  Copyright (c) 1985 - 2024 Kaleb Jubar
  */
+import { Provider } from 'react-redux';
+import { store } from './src/data/state/store';
+
 import { StatusBar } from 'expo-status-bar';
 
 import { DefaultTheme, NavigationContainer, Theme } from '@react-navigation/native';
@@ -28,6 +31,7 @@ const EventsTheme: Theme = {
 export default function App() {
     return (
         <RootSiblingParent>
+        <Provider store={store}>
         <NavigationContainer theme={EventsTheme}>
 
             <StatusBar style="light" />
@@ -35,6 +39,7 @@ export default function App() {
             <LoginStack />
 
         </NavigationContainer>
+        </Provider>
         </RootSiblingParent>
     );
 }
