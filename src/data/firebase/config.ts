@@ -1,11 +1,14 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 6 Nov 2024, 4:55:15 PM
- *  Last update: 25 Nov 2024, 4:11:28 PM
+ *  Last update: 25 Nov 2024, 10:07:05 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { initializeApp } from "firebase/app";
+import { initializeAuth, getReactNativePersistence } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Firebase app config
 const firebaseConfig = {
@@ -20,6 +23,9 @@ const firebaseConfig = {
 // initialize app and Firestore
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
+export const auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(AsyncStorage),
+});
 
 // constants/types for events data
 export const eventsCollection = "events";
