@@ -1,29 +1,33 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 3:43:02 PM
- *  Last update: 26 Nov 2024, 12:51:28 PM
+ *  Last update: 26 Nov 2024, 3:54:34 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useState } from "react";
 
-import { View, Text, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 
-import { useEventList } from "../../data/state/hooks";
+import { Event } from "../../data/firebase/config";
+
+import { EventList } from "../../components/events/EventList";
 
 import { EventDetailScreen } from "../EventDetailScreen";
 
 export function EventListScreen(): JSX.Element {
     const [detailsShown, setDetailsShown] = useState<boolean>(false);
-    const events = useEventList();
+    const [selectedEvent, setSelectedEvent] = useState<Event | undefined>(undefined);
+
+    const showEventDetails = (event: Event) => {
+        setSelectedEvent(event);
+        setDetailsShown(true);
+    };
 
     return (
         <View style={{flex: 1}}>
-            <Text>{events[0].title}</Text>
-            <TouchableOpacity onPress={() => setDetailsShown(true)}>
-                <Text>Go to detail</Text>
-            </TouchableOpacity>
+            <EventList onPressEventItem={showEventDetails} />
 
-            <EventDetailScreen visible={detailsShown} close={() => setDetailsShown(false)} event={events[0]} />
+            <EventDetailScreen visible={detailsShown} close={() => setDetailsShown(false)} event={selectedEvent} />
         </View>
     );
 }
