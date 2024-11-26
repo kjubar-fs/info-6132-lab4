@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 26 Nov 2024, 10:53:39 AM
- *  Last update: 26 Nov 2024, 12:03:06 PM
+ *  Last update: 26 Nov 2024, 12:45:07 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { Timestamp } from "firebase/firestore";
@@ -41,11 +41,17 @@ export async function loadEvents(dispatch: AppDispatch) {
 }
 
 /**
- * Load all favorites for the specified user from DB and save into state.
- * @param userID user ID to load for
+ * Load all favorites for the current user from DB and save into state.
  * @param dispatch AppDispatch used to update state
  */
-export async function loadFavorites(userID: string, dispatch: AppDispatch) {
+export async function loadFavorites(dispatch: AppDispatch) {
+    // get user ID from auth
+    const userID = auth.currentUser?.uid;
+    // can't make update if not logged in
+    if (userID === undefined) {
+        return;
+    }
+    
     // get favorites from DB
     const favorites = await getFavoritesForUser(userID);
 
