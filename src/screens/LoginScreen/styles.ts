@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 7:57:27 PM
- *  Last update: 26 Nov 2024, 1:14:57 PM
+ *  Last update: 26 Nov 2024, 1:34:03 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { StyleSheet } from "react-native";
@@ -43,13 +43,14 @@ export default StyleSheet.create({
     },
 
     caption: {
-        padding: 2,
+        paddingVertical: 2,
         fontSize: 17,
         color: "white",
     },
     
     error: {
-        padding: 2,
+        paddingVertical: 2,
+        paddingHorizontal: 4,
         fontSize: 17,
         backgroundColor: "white",
         color: "#D00",

@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 6:57:13 PM
- *  Last update: 26 Nov 2024, 1:28:37 PM
+ *  Last update: 26 Nov 2024, 1:37:04 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useEffect, useState } from "react";
@@ -103,7 +103,7 @@ function LoginScreen(): JSX.Element {
 
         // check if required error is necessary
         if (!newEmail) {
-            setEmailError("Email is required");
+            setEmailError("Required");
         } else {
             setEmailError("");
         }
@@ -115,7 +115,7 @@ function LoginScreen(): JSX.Element {
 
         // check if required error is necessary
         if (!newPass) {
-            setPasswordError("Password is required");
+            setPasswordError("Required");
         } else {
             setPasswordError("");
         }
