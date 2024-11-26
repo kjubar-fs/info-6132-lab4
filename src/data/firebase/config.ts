@@ -1,12 +1,12 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 6 Nov 2024, 4:55:15 PM
- *  Last update: 25 Nov 2024, 10:07:05 PM
+ *  Last update: 26 Nov 2024, 9:46:42 AM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { initializeApp } from "firebase/app";
 import { initializeAuth, getReactNativePersistence } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, Timestamp } from "firebase/firestore";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -32,10 +32,8 @@ export const eventsCollection = "events";
 
 export type Event = {
     id: string,
-    author: string,
-    checkedOut: boolean,
-    coverURL: string,
-    description: string,
-    rating: number,
+    creatorID: string,
     title: string,
+    description: string,
+    startInstant: Timestamp,
 };
