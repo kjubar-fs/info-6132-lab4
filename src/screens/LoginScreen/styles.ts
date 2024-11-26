@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 7:57:27 PM
- *  Last update: 25 Nov 2024, 10:54:49 PM
+ *  Last update: 26 Nov 2024, 1:14:57 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { StyleSheet } from "react-native";
@@ -67,7 +67,7 @@ export default StyleSheet.create({
     },
 
     loginBtn: {
-        width: "50%",
+        minWidth: "50%",
         padding: 10,
         alignItems: "center",
 
@@ -84,5 +84,10 @@ export default StyleSheet.create({
         fontSize: 18,
         color: "white",
         fontWeight: "500",
+    },
+
+    signUpText: {
+        fontSize: 15,
+        color: "#DDD",
     },
 });

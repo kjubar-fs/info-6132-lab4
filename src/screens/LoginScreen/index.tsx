@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 6:57:13 PM
- *  Last update: 25 Nov 2024, 11:19:37 PM
+ *  Last update: 26 Nov 2024, 1:16:43 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useEffect, useState } from "react";
@@ -20,6 +20,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Toast from "react-native-root-toast";
 
 import { AppScreen } from "../AppScreen";
+import { CreateAccountScreen } from "../CreateAccountScreen";
 
 import { validateEmail } from "../../util/functions";
 import { primaryColor } from "../../util/constants";
@@ -76,9 +77,10 @@ export function LoginStack(): JSX.Element {
 function LoginScreen(): JSX.Element {
     const navigation = useNavigation();
     const [email, setEmail] = useState<string | undefined>(undefined);
-    const [emailError, setEmailError] = useState<string | undefined>(undefined);
+    const [emailError, setEmailError] = useState<string>("");
     const [password, setPassword] = useState<string | undefined>(undefined);
-    const [passwordError, setPasswordError] = useState<string | undefined>(undefined);
+    const [passwordError, setPasswordError] = useState<string>("");
+    const [signUpShown, setSignUpShown] = useState<boolean>(false);
 
     // set up reauth listener as a mount effect
     useEffect(() => {
@@ -210,13 +212,26 @@ function LoginScreen(): JSX.Element {
                 </View>
             </View>
 
-            <TouchableHighlight
-                style={styles.loginBtn}
-                underlayColor="#DDD"
-                onPress={login}
-            >
-                <Text style={styles.loginText}>Login</Text>
-            </TouchableHighlight>
+            <View style={styles.containerInner}>
+                <TouchableHighlight
+                    style={styles.loginBtn}
+                    underlayColor="#DDD"
+                    onPress={login}
+                >
+                    <Text style={styles.loginText}>Login</Text>
+                </TouchableHighlight>
+
+                <TouchableOpacity onPress={() => {
+                    // clear errors when showing sign up modal
+                    setEmailError("");
+                    setPasswordError("");
+
+                    // show modal
+                    setSignUpShown(true);
+                }}><Text style={styles.signUpText}>Don't have an account? Sign up!</Text></TouchableOpacity>
+            </View>
+
+            <CreateAccountScreen visible={signUpShown} close={() => setSignUpShown(false)} />
         </View>
     );
 }
