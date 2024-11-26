@@ -1,12 +1,14 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 26 Oct 1985, 4:15:00 AM
- *  Last update: 25 Nov 2024, 7:00:57 PM
+ *  Last update: 25 Nov 2024, 10:25:26 PM
  *  Copyright (c) 1985 - 2024 Kaleb Jubar
  */
 import { StatusBar } from 'expo-status-bar';
 
 import { DefaultTheme, NavigationContainer, Theme } from '@react-navigation/native';
+
+import { RootSiblingParent } from "react-native-root-siblings";
 
 import { LoginStack } from './src/screens/LoginScreen';
 
@@ -25,6 +27,7 @@ const EventsTheme: Theme = {
 
 export default function App() {
     return (
+        <RootSiblingParent>
         <NavigationContainer theme={EventsTheme}>
 
             <StatusBar style="light" />
@@ -32,5 +35,6 @@ export default function App() {
             <LoginStack />
 
         </NavigationContainer>
+        </RootSiblingParent>
     );
 }
