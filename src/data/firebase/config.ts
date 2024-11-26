@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
- *  Created: 6 Nov 2024, 4:55:15 PM
- *  Last update: 26 Nov 2024, 9:46:42 AM
+ *  Created: 25 Nov 2024, 3:43:02 PM
+ *  Last update: 26 Nov 2024, 11:06:25 AM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { initializeApp } from "firebase/app";
@@ -36,4 +36,8 @@ export type Event = {
     title: string,
     description: string,
     startInstant: Timestamp,
+    location: string,
 };
+
+// constants for favorites data
+export const favoritesCollection = "userFavorites";
