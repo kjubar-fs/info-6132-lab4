@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 26 Nov 2024, 1:17:01 PM
- *  Last update: 26 Nov 2024, 2:14:04 PM
+ *  Last update: 26 Nov 2024, 2:53:41 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { StyleSheet } from "react-native";
@@ -67,6 +67,7 @@ export default StyleSheet.create({
     button: {
         paddingVertical: 5,
         paddingHorizontal: 8,
+        
         borderRadius: 5,
     },
 
