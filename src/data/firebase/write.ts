@@ -1,10 +1,10 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 26 Nov 2024, 10:18:28 AM
- *  Last update: 26 Nov 2024, 11:25:00 AM
+ *  Last update: 26 Nov 2024, 12:16:46 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
-import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 
 import { db, Event, eventsCollection, favoritesCollection } from "./config";
 
@@ -65,6 +65,28 @@ export async function deleteEvent(eventID: string): Promise<boolean> {
     } catch (error) {
         // caught an error, log it and return failure
         console.error(`Error deleting event ${eventID}:`, error);
+        return false;
+    }
+}
+
+/**
+ * Create an empty favorites list for the specified user.
+ * Only for use on new users -- WILL OVERWRITE if called for an existing user.
+ * @param userID user ID to create for
+ * @returns true if successful, false if failed
+ */
+export async function createFavoritesList(userID: string): Promise<boolean> {
+    try {
+        // update in the database
+        await setDoc(doc(db, favoritesCollection, userID), {
+            favorites: [],
+        });
+
+        // if we got here, it was successful
+        return true;
+    } catch (error) {
+        // caught an error, log it and return failure
+        console.error(`Error creating favorites list for user ${userID}:`, error);
         return false;
     }
 }
