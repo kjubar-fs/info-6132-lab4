@@ -1,12 +1,12 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 26 Nov 2024, 1:00:55 PM
- *  Last update: 26 Nov 2024, 1:40:08 PM
+ *  Last update: 26 Nov 2024, 2:02:36 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useEffect, useState } from "react";
 
-import { Text, TouchableOpacity, View, TextInput } from "react-native";
+import { Text, View, TextInput, TouchableHighlight } from "react-native";
 
 import { GenericModal } from "../../components/common/GenericModal";
 
@@ -77,6 +77,8 @@ export function CreateAccountScreen({ visible, close }: Props): JSX.Element {
 
     return (
         <GenericModal visible={visible} cardStyles={styles.container}>
+            <Text style={styles.title}>Create Account</Text>
+
             <View style={styles.containerInput}>
                 <View style={styles.containerCaption}>
                     <Text style={styles.caption}>Email</Text>
@@ -131,9 +133,15 @@ export function CreateAccountScreen({ visible, close }: Props): JSX.Element {
                 />
             </View>
 
-            <TouchableOpacity onPress={close}>
-                <Text>Close</Text>
-            </TouchableOpacity>
+            <View style={styles.containerBtns}>
+                <TouchableHighlight style={[styles.button, styles.cancelBtn]} onPress={close} underlayColor="#D00">
+                    <Text style={styles.btnCaption}>Cancel</Text>
+                </TouchableHighlight>
+
+                <TouchableHighlight style={[styles.button, styles.signUpBtn]} onPress={() => console.log("create")} underlayColor="#0D0">
+                    <Text style={styles.btnCaption}>Sign Up</Text>
+                </TouchableHighlight>
+            </View>
         </GenericModal>
     );
 }

@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 26 Nov 2024, 1:17:01 PM
- *  Last update: 26 Nov 2024, 1:33:40 PM
+ *  Last update: 26 Nov 2024, 2:01:14 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { StyleSheet } from "react-native";
@@ -24,6 +24,21 @@ export default StyleSheet.create({
         paddingVertical: 2,
     },
 
+    containerBtns: {
+        width: "100%",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingTop: 10,
+    },
+
+    title: {
+        alignSelf: "flex-start",
+        paddingBottom: 10,
+        
+        fontSize: 19,
+        fontWeight: "600",
+    },
+
     caption: {
         fontSize: 17,
     },
@@ -43,5 +58,25 @@ export default StyleSheet.create({
     error: {
         fontSize: 17,
         color: "#D00",
+    },
+
+    button: {
+        paddingVertical: 5,
+        paddingHorizontal: 8,
+        borderRadius: 5,
+    },
+
+    cancelBtn: {
+        backgroundColor: "#A00",
+    },
+
+    signUpBtn: {
+        backgroundColor: "#0A0",
+    },
+
+    btnCaption: {
+        fontSize: 16,
+        fontWeight: "500",
+        color: "white",
     },
 });
