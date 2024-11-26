@@ -1,24 +1,28 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 6 Nov 2024, 11:00:26 AM
- *  Last update: 25 Nov 2024, 4:14:48 PM
+ *  Last update: 25 Nov 2024, 7:38:59 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Event } from "../../data/firebase/config";
 
-import { HomeStackParamList } from "../HomeScreen";
+import { GenericModal } from "../../components/common/GenericModal";
 
-// generate prop types for the route object for this screen
-type Props = NativeStackScreenProps<HomeStackParamList, "eventDetail">;
+interface Props {
+    visible: boolean,
+    close: () => void,
+    event: Event,
+}
 
-export function EventDetailScreen({ route }: Props): JSX.Element {
-    const event = route.params.event;
-
+export function EventDetailScreen({ visible, close, event }: Props): JSX.Element {
     return (
-        <View>
+        <GenericModal visible={visible}>
             <Text>Event details here</Text>
-        </View>
+            <TouchableOpacity onPress={close}>
+                <Text>Close</Text>
+            </TouchableOpacity>
+        </GenericModal>
     );
 }

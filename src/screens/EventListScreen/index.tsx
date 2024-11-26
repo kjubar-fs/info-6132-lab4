@@ -1,18 +1,17 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 3:43:02 PM
- *  Last update: 25 Nov 2024, 7:04:53 PM
+ *  Last update: 25 Nov 2024, 7:39:53 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
-import { Text, TouchableOpacity } from "react-native";
+import { useState } from "react";
 
-import { ScreenWrapper } from "../../components/common/ScreenWrapper";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { HomeStackParamList } from "../HomeScreen";
+import { View, Text, TouchableOpacity } from "react-native";
+
+import { EventDetailScreen } from "../EventDetailScreen";
 
 export function EventListScreen(): JSX.Element {
-    const navigation = useNavigation<NativeStackNavigationProp<HomeStackParamList>>();
+    const [detailsShown, setDetailsShown] = useState(false);
     const fakeEvent = {
         id: "1",
         author: "Blob",
@@ -24,13 +23,13 @@ export function EventListScreen(): JSX.Element {
     };
 
     return (
-        // <ScreenWrapper>
-        <>
+        <View style={{flex: 1}}>
             <Text>Event list here</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("eventDetail", { event: fakeEvent })}>
+            <TouchableOpacity onPress={() => setDetailsShown(true)}>
                 <Text>Go to detail</Text>
             </TouchableOpacity>
-        </>
-        // </ScreenWrapper>
+
+            <EventDetailScreen visible={detailsShown} close={() => setDetailsShown(false)} event={fakeEvent} />
+        </View>
     );
 }

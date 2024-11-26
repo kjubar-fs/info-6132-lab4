@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 3:43:02 PM
- *  Last update: 25 Nov 2024, 6:11:03 PM
+ *  Last update: 25 Nov 2024, 7:16:45 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { Platform } from "react-native";
@@ -11,8 +11,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
-import { HomeScreen } from "../HomeScreen";
 import { FavoritesScreen } from "../FavoritesScreen";
+import { EventListScreen } from "../EventListScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -32,7 +32,7 @@ export function AppScreen(): JSX.Element {
         >
             <Tab.Screen
                 name="All Events"
-                component={HomeScreen}
+                component={EventListScreen}
                 options={{
                     tabBarIcon: ({ color, size }): JSX.Element => (
                         <MaterialIcons name="event" size={size} color={color} />
