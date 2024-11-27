@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 26 Nov 2024, 3:30:44 PM
- *  Last update: 26 Nov 2024, 4:21:55 PM
+ *  Last update: 26 Nov 2024, 7:00:23 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { View, Text, TouchableHighlight } from "react-native";
@@ -15,7 +15,9 @@ import { Card } from "../../../common/Card";
 import styles from "./styles";
 
 interface Props {
+    /** Event to render for */
     event: Event,
+    /** Handler for pressing on this event */
     onPress?: (event: Event) => void,
 }
 
