@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 3:43:02 PM
- *  Last update: 27 Nov 2024, 12:06:32 AM
+ *  Last update: 27 Nov 2024, 12:07:21 AM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useState, useEffect } from "react";
@@ -154,6 +154,17 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
      * Save the pending changes to this event.
      */
     const saveChanges = async () => {
+        // if nothing changed, just close edit mode
+        if (
+            newTitle === event.title &&
+            newLocation === event.location &&
+            newStartDateTime.valueOf() === event.startInstant.toDate().valueOf() &&
+            newDescription === event.description
+        ) {
+            setInEditMode(false);
+            return;
+        }
+        
         const updatedEvent = {...event};
         updatedEvent.title = newTitle;
         updatedEvent.location = newLocation;
