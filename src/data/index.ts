@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 26 Nov 2024, 10:53:39 AM
- *  Last update: 26 Nov 2024, 12:45:07 PM
+ *  Last update: 27 Nov 2024, 11:03:06 AM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { Timestamp } from "firebase/firestore";
@@ -61,14 +61,20 @@ export async function loadFavorites(dispatch: AppDispatch) {
 
 /**
  * Add a new event to the DB and state.
- * @param creatorID user ID creating the event
  * @param title event title
  * @param description event description
  * @param startInstant instant of event start
  * @param location event location
  * @param dispatch AppDispatch used to update state
  */
-export async function addEvent(creatorID: string, title: string, description: string, startInstant: Timestamp, location: string, dispatch: AppDispatch) {
+export async function addEvent(title: string, description: string, startInstant: Timestamp, location: string, dispatch: AppDispatch) {
+    // get user ID from auth
+    const creatorID = auth.currentUser?.uid;
+    // can't make update if not logged in
+    if (creatorID === undefined) {
+        return;
+    }
+
     // create a new partial event object for adding to DB
     const newEvent: Partial<Event> = {
         creatorID,
