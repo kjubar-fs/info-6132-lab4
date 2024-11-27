@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 26 Nov 2024, 3:30:44 PM
- *  Last update: 27 Nov 2024, 11:13:18 AM
+ *  Last update: 27 Nov 2024, 11:27:20 AM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useState } from "react";
@@ -14,9 +14,9 @@ import { useEventList, useFavorites } from "../../../data/state/hooks";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import { EventListItem } from "./EventListItem";
+import { CreateEventScreen } from "../../../screens/CreateEventScreen";
 
 import styles from "./styles";
-import { CreateEventScreen } from "../../../screens/CreateEventScreen";
 
 interface Props {
     /** Handler for pressing on an event item */
