@@ -1,12 +1,12 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 3:43:02 PM
- *  Last update: 26 Nov 2024, 11:22:53 PM
+ *  Last update: 26 Nov 2024, 11:58:04 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useState, useEffect } from "react";
 
-import { Alert, Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableHighlight, TouchableOpacity, View, TextInput } from "react-native";
 
 import { Timestamp } from "firebase/firestore";
 import { auth, Event } from "../../data/firebase/config";
@@ -37,7 +37,10 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
     // run hooks prior to any returns to avoid mismatched hook call errors
     const [inEditMode, setInEditMode] = useState<boolean>(false);
 
+    const [newTitle, setNewTitle] = useState<string>(event?.title ?? "");
+    const [newLocation, setNewLocation] = useState<string>(event?.location ?? "");
     const [newStartDateTime, setNewStartDateTime] = useState<Date>(event?.startInstant.toDate() ?? new Date());
+    const [newDescription, setNewDescription] = useState<string>(event?.description ?? "");
 
     const favorites = useFavorites();
     const dispatch = useAppDispatch();
@@ -45,6 +48,9 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
     // refresh data upon receiving a new event param
     useEffect(() => {
         setNewStartDateTime(event?.startInstant.toDate() ?? new Date());
+        setNewTitle(event?.title ?? "");
+        setNewLocation(event?.location ?? "");
+        setNewDescription(event?.description ?? "");
     }, [event]);
 
     if (event === undefined) {
@@ -61,6 +67,7 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
         );
     }
 
+    //#region calculated vars
     // determine if the user can edit/delete
     const canEdit = auth.currentUser!.uid === event.creatorID;
 
@@ -79,7 +86,9 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
         hour: "numeric",
         minute: "2-digit",
     });
+    //#endregion
 
+    //#region callbacks
     /**
      * Toggle this event as a favorite.
      */
@@ -107,8 +116,11 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
                     // close edit mode
                     setInEditMode(false);
 
-                    // TODO: revert local editor state to current event details
+                    // revert local editor state to current event details
+                    setNewTitle(event.title);
+                    setNewLocation(event.location);
                     setNewStartDateTime(event.startInstant.toDate());
+                    setNewDescription(event.description);
                 },
             },
         ]);
@@ -130,9 +142,11 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
      * Save the pending changes to this event.
      */
     const saveChanges = async () => {
-        // TODO: update with new event data from local state
         const updatedEvent = {...event};
+        updatedEvent.title = newTitle;
+        updatedEvent.location = newLocation;
         updatedEvent.startInstant = new Timestamp(newStartDateTime.valueOf() / 1000, 0);    // divide by 1000, since Timestamp takes seconds
+        updatedEvent.description = newDescription;
         await updateEvent(updatedEvent, dispatch);
 
         eventUpdated(updatedEvent);
@@ -140,7 +154,9 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
         // close edit mode
         setInEditMode(false);
     };
+    //#endregion
 
+    //#region state-dependent content
     // show different content for the favorite button based on status
     const favoriteContent = 
         eventFavorited ? (
@@ -202,10 +218,54 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
             </>
         );
 
+    // and the title
+    const titleContent =
+        inEditMode ? (
+            <TextInput
+                style={[styles.title, styles.input]}
+                value={newTitle}
+                onChangeText={setNewTitle}
+                autoCorrect={false}
+                autoCapitalize="none"
+            />
+        ) : (
+            <Text style={styles.title}>{event.title}</Text>
+        );
+
+    // and the location
+    const locationContent =
+        inEditMode ? (
+            <TextInput
+                style={[styles.location, styles.input]}
+                value={newLocation}
+                onChangeText={setNewLocation}
+                autoCorrect={false}
+                autoCapitalize="none"
+            />
+        ) : (
+            <Text style={styles.location}>{event.location}</Text>
+        );
+    
+    // and the description
+    const descriptionContent =
+        inEditMode ? (
+            <TextInput
+                style={[styles.description, styles.input]}
+                value={newDescription}
+                onChangeText={setNewDescription}
+                autoCorrect={false}
+                autoCapitalize="none"
+                multiline
+            />
+        ) : (
+            <Text style={styles.description}>{event.description}</Text>
+        );
+    //#endregion
+
     return (
         <GenericModal visible={visible} cardStyles={styles.container}>
             <View style={styles.containerTitle}>
-                <Text style={styles.title}>{event.title}</Text>
+                {titleContent}
 
                 {!inEditMode &&
                     <TouchableHighlight
@@ -217,13 +277,13 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
                     </TouchableHighlight>}
             </View>
 
-            <Text style={styles.location}>{event.location}</Text>
+            {locationContent}
 
             <View style={styles.containerDateTime}>
                 {dateTimeContent}
             </View>
 
-            <Text style={styles.description}>{event.description}</Text>
+            {descriptionContent}
 
             <View style={styles.containerActions}>
                 {leftActionBtn}
