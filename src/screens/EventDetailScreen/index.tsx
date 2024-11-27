@@ -1,13 +1,14 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 3:43:02 PM
- *  Last update: 26 Nov 2024, 10:40:30 PM
+ *  Last update: 26 Nov 2024, 11:22:53 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Alert, Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
 
+import { Timestamp } from "firebase/firestore";
 import { auth, Event } from "../../data/firebase/config";
 import { useAppDispatch, useFavorites } from "../../data/state/hooks";
 import { addFavorite, removeFavorite, updateEvent } from "../../data";
@@ -16,6 +17,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Feather from '@expo/vector-icons/Feather';
 
 import { GenericModal } from "../../components/common/GenericModal";
+import { DateTimePicker } from "../../components/common/DateTimePicker";
 
 import { accentColor } from "../../util/constants";
 import styles from "./styles";
@@ -27,13 +29,23 @@ interface Props {
     close: () => void,
     /** Event to display details for */
     event?: Event,
+    /** Callback to refresh parent when the event is updated */
+    eventUpdated: (updatedEvent: Event) => void,
 }
 
-export function EventDetailScreen({ visible, close, event }: Props): JSX.Element {
+export function EventDetailScreen({ visible, close, event, eventUpdated }: Props): JSX.Element {
     // run hooks prior to any returns to avoid mismatched hook call errors
     const [inEditMode, setInEditMode] = useState<boolean>(false);
+
+    const [newStartDateTime, setNewStartDateTime] = useState<Date>(event?.startInstant.toDate() ?? new Date());
+
     const favorites = useFavorites();
     const dispatch = useAppDispatch();
+
+    // refresh data upon receiving a new event param
+    useEffect(() => {
+        setNewStartDateTime(event?.startInstant.toDate() ?? new Date());
+    }, [event]);
 
     if (event === undefined) {
         return (
@@ -96,6 +108,7 @@ export function EventDetailScreen({ visible, close, event }: Props): JSX.Element
                     setInEditMode(false);
 
                     // TODO: revert local editor state to current event details
+                    setNewStartDateTime(event.startInstant.toDate());
                 },
             },
         ]);
@@ -118,7 +131,11 @@ export function EventDetailScreen({ visible, close, event }: Props): JSX.Element
      */
     const saveChanges = async () => {
         // TODO: update with new event data from local state
-        // await updateEvent(updatedEvent, dispatch);
+        const updatedEvent = {...event};
+        updatedEvent.startInstant = new Timestamp(newStartDateTime.valueOf() / 1000, 0);    // divide by 1000, since Timestamp takes seconds
+        await updateEvent(updatedEvent, dispatch);
+
+        eventUpdated(updatedEvent);
         
         // close edit mode
         setInEditMode(false);
@@ -173,6 +190,17 @@ export function EventDetailScreen({ visible, close, event }: Props): JSX.Element
                 {favoriteContent}
             </TouchableOpacity>
         );
+    
+    // and the date and time
+    const dateTimeContent =
+        inEditMode ? (
+            <DateTimePicker initialValue={newStartDateTime} onChange={setNewStartDateTime} />
+        ) : (
+            <>
+                <Text style={styles.dateTime}>{dateStr}</Text>
+                <Text style={styles.dateTime}>{timeStr}</Text>
+            </>
+        );
 
     return (
         <GenericModal visible={visible} cardStyles={styles.container}>
@@ -192,8 +220,7 @@ export function EventDetailScreen({ visible, close, event }: Props): JSX.Element
             <Text style={styles.location}>{event.location}</Text>
 
             <View style={styles.containerDateTime}>
-                <Text style={styles.dateTime}>{dateStr}</Text>
-                <Text style={styles.dateTime}>{timeStr}</Text>
+                {dateTimeContent}
             </View>
 
             <Text style={styles.description}>{event.description}</Text>
