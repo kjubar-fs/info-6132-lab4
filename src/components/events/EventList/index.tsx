@@ -1,12 +1,12 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 26 Nov 2024, 3:30:44 PM
- *  Last update: 26 Nov 2024, 9:05:54 PM
+ *  Last update: 27 Nov 2024, 11:13:18 AM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useState } from "react";
 
-import { View, FlatList, Text, TouchableHighlight, TouchableOpacity } from "react-native";
+import { View, FlatList, Text, TouchableHighlight } from "react-native";
 
 import { Event } from "../../../data/firebase/config";
 import { useEventList, useFavorites } from "../../../data/state/hooks";
@@ -14,9 +14,9 @@ import { useEventList, useFavorites } from "../../../data/state/hooks";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import { EventListItem } from "./EventListItem";
-import { GenericModal } from "../../common/GenericModal";
 
 import styles from "./styles";
+import { CreateEventScreen } from "../../../screens/CreateEventScreen";
 
 interface Props {
     /** Handler for pressing on an event item */
@@ -50,9 +50,7 @@ export function EventList({ onPressEventItem, favoritesOnly = false }: Props) {
                     <MaterialIcons name="add" size={36} color="white" />
                 </TouchableHighlight>}
 
-            <GenericModal visible={addShown}>
-                <TouchableOpacity onPress={() => setAddShown(false)}><Text>Close</Text></TouchableOpacity>
-            </GenericModal>
+            <CreateEventScreen visible={addShown} close={() => setAddShown(false)} />
         </View>
     );
 }
