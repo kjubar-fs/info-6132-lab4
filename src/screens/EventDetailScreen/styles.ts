@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 7 Nov 2024, 9:24:25 AM
- *  Last update: 26 Nov 2024, 9:36:06 PM
+ *  Last update: 26 Nov 2024, 10:15:35 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { StyleSheet } from "react-native";
@@ -75,18 +75,31 @@ export default StyleSheet.create({
     favoriteBtn: {
         flexDirection: "row",
         alignItems: "center",
-        padding: 5,
+        padding: 3,
         paddingRight: 8,
         gap: 5,
 
-        backgroundColor: accentColor,
         borderRadius: 5,
+        borderWidth: 2,
+    },
+
+    favorited: {
+        backgroundColor: accentColor,
+        borderColor: accentColor,
+    },
+
+    unfavorited: {
+        borderColor: accentColor,
     },
 
     favoriteText: {
         fontSize: 16,
         fontWeight: "500",
         color: "white",
+    },
+
+    unfavoritedText: {
+        color: accentColor,
     },
 
     editBtn: {

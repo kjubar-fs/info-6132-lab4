@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 3:43:02 PM
- *  Last update: 26 Nov 2024, 10:01:19 PM
+ *  Last update: 26 Nov 2024, 10:14:53 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useState } from "react";
@@ -16,6 +16,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import { GenericModal } from "../../components/common/GenericModal";
 
+import { accentColor } from "../../util/constants";
 import styles from "./styles";
 
 interface Props {
@@ -86,8 +87,8 @@ export function EventDetailScreen({ visible, close, event }: Props): JSX.Element
             </>
         ) : (
             <>
-                <MaterialIcons name="star-outline" size={24} color="white" />
-                <Text style={styles.favoriteText}>Favorite</Text>
+                <MaterialIcons name="star-outline" size={24} color={accentColor} />
+                <Text style={[styles.favoriteText, styles.unfavoritedText]}>Favorite</Text>
             </>
         );
 
@@ -125,7 +126,7 @@ export function EventDetailScreen({ visible, close, event }: Props): JSX.Element
             <Text style={styles.description}>{event.description}</Text>
 
             <View style={styles.containerActions}>
-                <TouchableOpacity style={styles.favoriteBtn} onPress={toggleFavorite}>
+                <TouchableOpacity style={[styles.favoriteBtn, eventFavorited ? styles.favorited : styles.unfavorited]} onPress={toggleFavorite}>
                     {favoriteContent}
                 </TouchableOpacity>
 
