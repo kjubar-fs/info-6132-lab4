@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 3:43:02 PM
- *  Last update: 26 Nov 2024, 11:58:04 PM
+ *  Last update: 27 Nov 2024, 12:06:32 AM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useState, useEffect } from "react";
@@ -104,6 +104,18 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
      * Cancel the pending changes to this event.
      */
     const cancelChanges = () => {
+        // if nothing changed, just close edit mode
+        if (
+            newTitle === event.title &&
+            newLocation === event.location &&
+            newStartDateTime.valueOf() === event.startInstant.toDate().valueOf() &&
+            newDescription === event.description
+        ) {
+            setInEditMode(false);
+            return;
+        }
+
+        // otherwise, confirm discard via alert
         Alert.alert("Discard Changes", "Are you sure you wish to discard your changes?", [
             {
                 text: "Cancel",
