@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 3:43:02 PM
- *  Last update: 26 Nov 2024, 3:54:34 PM
+ *  Last update: 26 Nov 2024, 6:59:43 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useState } from "react";
@@ -14,7 +14,12 @@ import { EventList } from "../../components/events/EventList";
 
 import { EventDetailScreen } from "../EventDetailScreen";
 
-export function EventListScreen(): JSX.Element {
+interface Props {
+    /** Should this list display only favorites for the current user? */
+    favoritesList?: boolean,
+}
+
+export function EventListScreen({ favoritesList = false }: Props): JSX.Element {
     const [detailsShown, setDetailsShown] = useState<boolean>(false);
     const [selectedEvent, setSelectedEvent] = useState<Event | undefined>(undefined);
 
@@ -25,7 +30,7 @@ export function EventListScreen(): JSX.Element {
 
     return (
         <View style={{flex: 1}}>
-            <EventList onPressEventItem={showEventDetails} />
+            <EventList onPressEventItem={showEventDetails} favoritesOnly={favoritesList} />
 
             <EventDetailScreen visible={detailsShown} close={() => setDetailsShown(false)} event={selectedEvent} />
         </View>

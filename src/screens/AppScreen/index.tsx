@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 3:43:02 PM
- *  Last update: 26 Nov 2024, 12:36:16 PM
+ *  Last update: 26 Nov 2024, 7:17:31 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useState } from "react";
@@ -15,7 +15,6 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 import { AppLoader } from "../../components/singleton/AppLoader";
 import { LoadingIndicator } from "../../components/common/LoadingIndicator";
-import { FavoritesScreen } from "../FavoritesScreen";
 import { EventListScreen } from "../EventListScreen";
 
 const Tab = createBottomTabNavigator();
@@ -50,13 +49,17 @@ export function AppScreen(): JSX.Element {
                 
                 <Tab.Screen
                     name="Favorites"
-                    component={FavoritesScreen}
                     options={{
                         tabBarIcon: ({ color, size, focused }): JSX.Element => (
                             <MaterialCommunityIcons name={focused ? "bookmark-box-multiple" : "bookmark-box-multiple-outline"} size={size} color={color} />
                         ),
                     }}
-                />
+                >
+                    {/* there apparently is a way to always pass a param to a tab when navigating via the listeners option,
+                        as demonstrated here: https://stackoverflow.com/a/76159721, but this is a trivial situation and
+                        the performance loss from using the render function is negligible for this app */}
+                    {() => <EventListScreen favoritesList />}
+                </Tab.Screen>
             </Tab.Navigator>
         );
     }
