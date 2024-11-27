@@ -1,10 +1,10 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 26 Nov 2024, 10:18:28 AM
- *  Last update: 26 Nov 2024, 12:16:46 PM
+ *  Last update: 27 Nov 2024, 12:31:31 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
-import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDocs, query, runTransaction, setDoc, updateDoc, where } from "firebase/firestore";
 
 import { db, Event, eventsCollection, favoritesCollection } from "./config";
 
@@ -57,8 +57,30 @@ export async function updateEvent(updatedEvent: Event): Promise<boolean> {
  */
 export async function deleteEvent(eventID: string): Promise<boolean> {
     try {
-        // delete from database
-        await deleteDoc(doc(db, eventsCollection, eventID));
+        // get all users that have favorited this event
+        // has to be done outside the transaction to run a query
+        const snapshot = await getDocs(query(
+            collection(db, favoritesCollection),
+            where("favorites", "array-contains", eventID)
+        ));
+        const favoritesToDelete: string[] = [];
+        snapshot.forEach((favoritesDoc) => {
+            favoritesToDelete.push(favoritesDoc.id);
+        });
+
+        // open a transaction so that all modifications must succeed
+        // because we have to remove it from all favorites lists as well as delete it
+        await runTransaction(db, async (transaction) => {
+            // remove from all lists
+            for (const favoriteId of favoritesToDelete) {
+                transaction.update(doc(db, favoritesCollection, favoriteId), {
+                    favorites: arrayRemove(eventID),
+                });
+            }
+    
+            // delete from database
+            transaction.delete(doc(db, eventsCollection, eventID));
+        });
         
         // if we got here, it was successful
         return true;
