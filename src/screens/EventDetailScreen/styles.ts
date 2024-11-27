@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
- *  Created: 7 Nov 2024, 9:24:25 AM
- *  Last update: 27 Nov 2024, 12:36:06 AM
+ *  Created: 25 Nov 2024, 3:43:02 PM
+ *  Last update: 27 Nov 2024, 11:13:44 AM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { StyleSheet } from "react-native";
