@@ -1,12 +1,16 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 3:43:02 PM
- *  Last update: 26 Nov 2024, 3:42:02 PM
+ *  Last update: 26 Nov 2024, 9:28:23 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
-import { Text, TouchableHighlight, View } from "react-native";
+import { Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
 
 import { Event } from "../../data/firebase/config";
+import { useAppDispatch, useFavorites } from "../../data/state/hooks";
+import { addFavorite, removeFavorite } from "../../data";
+
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import { GenericModal } from "../../components/common/GenericModal";
 
@@ -22,6 +26,10 @@ interface Props {
 }
 
 export function EventDetailScreen({ visible, close, event }: Props): JSX.Element {
+    // create hooks prior to any returns to avoid mismatched hook call errors
+    const favorites = useFavorites();
+    const dispatch = useAppDispatch();
+
     if (event === undefined) {
         return (
             <GenericModal visible={visible}>
@@ -36,6 +44,9 @@ export function EventDetailScreen({ visible, close, event }: Props): JSX.Element
         );
     }
 
+    // determine if this event is favorited
+    const eventFavorited = favorites.findIndex((listEvent) => listEvent.id === event.id) !== -1;
+
     // format event date/time for display
     const eventTime = event.startInstant.toDate();
     const dateStr = eventTime.toLocaleDateString("en-CA", {
@@ -48,6 +59,31 @@ export function EventDetailScreen({ visible, close, event }: Props): JSX.Element
         hour: "numeric",
         minute: "2-digit",
     });
+
+    /**
+     * Toggle this event as a favorite.
+     */
+    const toggleFavorite = async () => {
+        if (eventFavorited) {
+            await removeFavorite(event.id, dispatch);
+        } else {
+            await addFavorite(event.id, dispatch);
+        }
+    };
+
+    // show different content for the favorite button based on status
+    const favoriteContent = 
+        eventFavorited ? (
+            <>
+                <MaterialIcons name="star" size={24} color="white" />
+                <Text style={styles.favoriteText}>Unfavorite</Text>
+            </>
+        ) : (
+            <>
+                <MaterialIcons name="star-outline" size={24} color="white" />
+                <Text style={styles.favoriteText}>Favorite</Text>
+            </>
+        );
 
     return (
         <GenericModal visible={visible} cardStyles={styles.container}>
@@ -67,6 +103,10 @@ export function EventDetailScreen({ visible, close, event }: Props): JSX.Element
             </View>
 
             <Text style={styles.description}>{event.description}</Text>
+
+            <TouchableOpacity style={styles.favoriteBtn} onPress={toggleFavorite}>
+                {favoriteContent}
+            </TouchableOpacity>
         </GenericModal>
     );
 }

@@ -1,10 +1,12 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 7 Nov 2024, 9:24:25 AM
- *  Last update: 26 Nov 2024, 3:25:20 PM
+ *  Last update: 26 Nov 2024, 9:24:07 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { StyleSheet } from "react-native";
+
+import { accentColor } from "../../util/constants";
 
 export default StyleSheet.create({
     container: {
@@ -61,5 +63,22 @@ export default StyleSheet.create({
 
     description: {
         fontSize: 18,
+    },
+
+    favoriteBtn: {
+        flexDirection: "row",
+        alignItems: "center",
+        padding: 5,
+        paddingRight: 8,
+        gap: 5,
+
+        backgroundColor: accentColor,
+        borderRadius: 5,
+    },
+
+    favoriteText: {
+        fontSize: 16,
+        fontWeight: "500",
+        color: "white",
     },
 });
