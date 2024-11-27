@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 6:57:13 PM
- *  Last update: 27 Nov 2024, 12:02:55 AM
+ *  Last update: 27 Nov 2024, 12:21:08 AM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useEffect, useState } from "react";
@@ -136,7 +136,7 @@ function LoginScreen(): JSX.Element {
     const login = () => {
         // check if email is valid
         let emailValid = false;
-        if (!email) {
+        if (!email || email.trim() === "") {
             setEmailError("Required");
         } else if (!validateEmail(email)) {
             setEmailError("Email format is invalid");
@@ -146,7 +146,7 @@ function LoginScreen(): JSX.Element {
 
         // check if password is valid
         let passwordValid = false;
-        if (!password) {
+        if (!password || password.trim() === "") {
             setPasswordError("Required");
         } else {
             passwordValid = true;
@@ -158,7 +158,7 @@ function LoginScreen(): JSX.Element {
         }
 
         // attempt Firebase login
-        signInWithEmailAndPassword(auth, email ?? "", password ?? "")
+        signInWithEmailAndPassword(auth, email?.trim() ?? "", password?.trim() ?? "")
             .then(() => {
                 // clear fields
                 setEmail(undefined);

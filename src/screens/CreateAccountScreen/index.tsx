@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 26 Nov 2024, 1:00:55 PM
- *  Last update: 26 Nov 2024, 2:43:01 PM
+ *  Last update: 27 Nov 2024, 12:21:01 AM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useEffect, useState } from "react";
@@ -88,7 +88,7 @@ export function CreateAccountScreen({ visible, close }: Props): JSX.Element {
     const createAccount = () => {
         // check if email is valid
         let emailValid = false;
-        if (!email) {
+        if (!email || email.trim() === "") {
             setEmailError("Required");
         } else if (!validateEmail(email)) {
             setEmailError("Email format is invalid");
@@ -98,7 +98,7 @@ export function CreateAccountScreen({ visible, close }: Props): JSX.Element {
 
         // check if password is valid
         let passwordValid = false;
-        if (!password) {
+        if (!password || password.trim() === "") {
             setPasswordError("Required");
         } else if (password.length < 6) {
             setPasswordError("Must be at least 6 characters");
@@ -108,9 +108,9 @@ export function CreateAccountScreen({ visible, close }: Props): JSX.Element {
 
         // check confirm password matches password
         let passwordVerifyValid = false;
-        if (!passwordVerify) {
+        if (!passwordVerify || passwordVerify.trim() === "") {
             setPasswordVerifyError("Required");
-        } else if (password !== passwordVerify) {
+        } else if (password?.trim() !== passwordVerify.trim()) {
             setPasswordVerifyError("Must match");
         } else {
             passwordVerifyValid = true;
@@ -122,7 +122,7 @@ export function CreateAccountScreen({ visible, close }: Props): JSX.Element {
         }
 
         // attempt Firebase account creation
-        createUserWithEmailAndPassword(auth, email ?? "", password ?? "")
+        createUserWithEmailAndPassword(auth, email?.trim() ?? "", password?.trim() ?? "")
             .then((credential) => {
                 // close the modal
                 close();
