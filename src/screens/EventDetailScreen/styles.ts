@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 7 Nov 2024, 9:24:25 AM
- *  Last update: 26 Nov 2024, 10:15:35 PM
+ *  Last update: 26 Nov 2024, 10:28:53 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { StyleSheet } from "react-native";
@@ -116,5 +116,16 @@ export default StyleSheet.create({
     editText: {
         fontSize: 16,
         fontWeight: "500",
+    },
+
+    saveBtn: {
+        flexDirection: "row",
+        alignItems: "center",
+        padding: 5,
+        paddingLeft: 8,
+        gap: 5,
+
+        backgroundColor: "#0A0",
+        borderRadius: 5,
     },
 });

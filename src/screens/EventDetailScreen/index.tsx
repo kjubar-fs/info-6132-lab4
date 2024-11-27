@@ -1,18 +1,19 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 3:43:02 PM
- *  Last update: 26 Nov 2024, 10:14:53 PM
+ *  Last update: 26 Nov 2024, 10:40:30 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useState } from "react";
 
-import { Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
 
 import { auth, Event } from "../../data/firebase/config";
 import { useAppDispatch, useFavorites } from "../../data/state/hooks";
-import { addFavorite, removeFavorite } from "../../data";
+import { addFavorite, removeFavorite, updateEvent } from "../../data";
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import Feather from '@expo/vector-icons/Feather';
 
 import { GenericModal } from "../../components/common/GenericModal";
 
@@ -78,6 +79,51 @@ export function EventDetailScreen({ visible, close, event }: Props): JSX.Element
         }
     };
 
+    /**
+     * Cancel the pending changes to this event.
+     */
+    const cancelChanges = () => {
+        Alert.alert("Discard Changes", "Are you sure you wish to discard your changes?", [
+            {
+                text: "Cancel",
+                style: "cancel",
+                // no onPress, since cancel does nothing
+            },
+            {
+                text: "Discard",
+                onPress: () => {
+                    // close edit mode
+                    setInEditMode(false);
+
+                    // TODO: revert local editor state to current event details
+                },
+            },
+        ]);
+    };
+
+    /**
+     * Either enable edit mode or save and close edit mode.
+     */
+    const editPressed = async () => {
+        if (!inEditMode) {
+            setInEditMode(true);
+            return;
+        }
+
+        await saveChanges();
+    };
+
+    /**
+     * Save the pending changes to this event.
+     */
+    const saveChanges = async () => {
+        // TODO: update with new event data from local state
+        // await updateEvent(updatedEvent, dispatch);
+        
+        // close edit mode
+        setInEditMode(false);
+    };
+
     // show different content for the favorite button based on status
     const favoriteContent = 
         eventFavorited ? (
@@ -96,8 +142,8 @@ export function EventDetailScreen({ visible, close, event }: Props): JSX.Element
     const editBtnContent =
         inEditMode ? (
             <>
-                <Text style={styles.editText}>Save</Text>
-                <MaterialIcons name="check" size={24} color="black" />
+                <Text style={styles.favoriteText}>Save</Text>
+                <MaterialIcons name="check" size={24} color="white" />
             </>
         ) : (
             <>
@@ -105,15 +151,42 @@ export function EventDetailScreen({ visible, close, event }: Props): JSX.Element
                 <MaterialIcons name="edit" size={24} color="black" />
             </>
         );
+    
+    // and the left action button (favorite or cancel)
+    const leftActionBtn =
+        inEditMode ? (
+            <TouchableHighlight
+                style={[styles.favoriteBtn, {backgroundColor: "#A00", borderColor: "#A00"}]}
+                onPress={cancelChanges}
+                underlayColor="#D00"
+            >
+                <>
+                    <Feather name="x" size={24} color="white" />
+                    <Text style={styles.favoriteText}>Cancel</Text>
+                </>
+            </TouchableHighlight>
+        ) : (
+            <TouchableOpacity
+                style={[styles.favoriteBtn, eventFavorited ? styles.favorited : styles.unfavorited]}
+                onPress={toggleFavorite}
+            >
+                {favoriteContent}
+            </TouchableOpacity>
+        );
 
     return (
         <GenericModal visible={visible} cardStyles={styles.container}>
             <View style={styles.containerTitle}>
                 <Text style={styles.title}>{event.title}</Text>
 
-                <TouchableHighlight style={styles.cancelBtn} onPress={close} underlayColor="#D00">
-                    <Text style={styles.cancelX}>X</Text>
-                </TouchableHighlight>
+                {!inEditMode &&
+                    <TouchableHighlight
+                        style={styles.cancelBtn}
+                        onPress={close}
+                        underlayColor="#D00"
+                    >
+                        <Text style={styles.cancelX}>X</Text>
+                    </TouchableHighlight>}
             </View>
 
             <Text style={styles.location}>{event.location}</Text>
@@ -126,12 +199,14 @@ export function EventDetailScreen({ visible, close, event }: Props): JSX.Element
             <Text style={styles.description}>{event.description}</Text>
 
             <View style={styles.containerActions}>
-                <TouchableOpacity style={[styles.favoriteBtn, eventFavorited ? styles.favorited : styles.unfavorited]} onPress={toggleFavorite}>
-                    {favoriteContent}
-                </TouchableOpacity>
+                {leftActionBtn}
 
                 {canEdit &&
-                    <TouchableHighlight style={styles.editBtn} onPress={() => setInEditMode(!inEditMode)}>
+                    <TouchableHighlight
+                        style={inEditMode ? styles.saveBtn : styles.editBtn}
+                        onPress={editPressed}
+                        underlayColor={inEditMode ? "#0D0" : "#EEE"}
+                    >
                         {editBtnContent}
                     </TouchableHighlight>}
             </View>
