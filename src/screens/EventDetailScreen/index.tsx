@@ -1,12 +1,14 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 3:43:02 PM
- *  Last update: 26 Nov 2024, 9:28:23 PM
+ *  Last update: 26 Nov 2024, 10:01:19 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
+import { useState } from "react";
+
 import { Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
 
-import { Event } from "../../data/firebase/config";
+import { auth, Event } from "../../data/firebase/config";
 import { useAppDispatch, useFavorites } from "../../data/state/hooks";
 import { addFavorite, removeFavorite } from "../../data";
 
@@ -26,7 +28,8 @@ interface Props {
 }
 
 export function EventDetailScreen({ visible, close, event }: Props): JSX.Element {
-    // create hooks prior to any returns to avoid mismatched hook call errors
+    // run hooks prior to any returns to avoid mismatched hook call errors
+    const [inEditMode, setInEditMode] = useState<boolean>(false);
     const favorites = useFavorites();
     const dispatch = useAppDispatch();
 
@@ -43,6 +46,9 @@ export function EventDetailScreen({ visible, close, event }: Props): JSX.Element
             </GenericModal>
         );
     }
+
+    // determine if the user can edit/delete
+    const canEdit = auth.currentUser!.uid === event.creatorID;
 
     // determine if this event is favorited
     const eventFavorited = favorites.findIndex((listEvent) => listEvent.id === event.id) !== -1;
@@ -85,6 +91,20 @@ export function EventDetailScreen({ visible, close, event }: Props): JSX.Element
             </>
         );
 
+    // and same for the edit button
+    const editBtnContent =
+        inEditMode ? (
+            <>
+                <Text style={styles.editText}>Save</Text>
+                <MaterialIcons name="check" size={24} color="black" />
+            </>
+        ) : (
+            <>
+                <Text style={styles.editText}>Edit</Text>
+                <MaterialIcons name="edit" size={24} color="black" />
+            </>
+        );
+
     return (
         <GenericModal visible={visible} cardStyles={styles.container}>
             <View style={styles.containerTitle}>
@@ -104,9 +124,16 @@ export function EventDetailScreen({ visible, close, event }: Props): JSX.Element
 
             <Text style={styles.description}>{event.description}</Text>
 
-            <TouchableOpacity style={styles.favoriteBtn} onPress={toggleFavorite}>
-                {favoriteContent}
-            </TouchableOpacity>
+            <View style={styles.containerActions}>
+                <TouchableOpacity style={styles.favoriteBtn} onPress={toggleFavorite}>
+                    {favoriteContent}
+                </TouchableOpacity>
+
+                {canEdit &&
+                    <TouchableHighlight style={styles.editBtn} onPress={() => setInEditMode(!inEditMode)}>
+                        {editBtnContent}
+                    </TouchableHighlight>}
+            </View>
         </GenericModal>
     );
 }
