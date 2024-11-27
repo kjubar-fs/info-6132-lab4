@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 3:43:02 PM
- *  Last update: 27 Nov 2024, 12:38:05 AM
+ *  Last update: 27 Nov 2024, 11:00:14 AM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useState, useEffect } from "react";
@@ -166,10 +166,10 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
     const cancelChanges = () => {
         // if nothing changed, just close edit mode
         if (
-            newTitle === event.title &&
-            newLocation === event.location &&
+            newTitle.trim() === event.title &&
+            newLocation.trim() === event.location &&
             newStartDateTime.valueOf() === event.startInstant.toDate().valueOf() &&
-            newDescription === event.description
+            newDescription.trim() === event.description
         ) {
             setInEditMode(false);
             return;
