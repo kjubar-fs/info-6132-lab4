@@ -1,12 +1,12 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 6:57:13 PM
- *  Last update: 26 Nov 2024, 2:09:32 PM
+ *  Last update: 27 Nov 2024, 12:02:55 AM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useEffect, useState } from "react";
 
-import { Text, View, TextInput, TouchableHighlight, TouchableOpacity } from "react-native";
+import { Alert, Text, View, TextInput, TouchableHighlight, TouchableOpacity } from "react-native";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
@@ -54,15 +54,27 @@ export function LoginStack(): JSX.Element {
                     headerLeft: () => (
                         <TouchableOpacity
                             onPress={() => {
-                                signOut(auth)
-                                    .then(() => {
-                                        navigation.goBack();
-                                    })
-                                    .catch((error: FirebaseError) => {
-                                        Toast.show(`Error signing out: ${error.code}`, {
-                                            duration: Toast.durations.LONG,
-                                        });
-                                    })
+                                Alert.alert("Log Out", "Are you sure you wish to log out?", [
+                                    {
+                                        text: "Cancel",
+                                        style: "cancel",
+                                        // no onPress, since cancel does nothing
+                                    },
+                                    {
+                                        text: "Log Out",
+                                        onPress: () => {
+                                            signOut(auth)
+                                                .then(() => {
+                                                    navigation.goBack();
+                                                })
+                                                .catch((error: FirebaseError) => {
+                                                    Toast.show(`Error signing out: ${error.code}`, {
+                                                        duration: Toast.durations.LONG,
+                                                    });
+                                                });
+                                        },
+                                    },
+                                ]);
                             }}
                         >
                             <Text style={styles.logoutText}>Log Out</Text>
