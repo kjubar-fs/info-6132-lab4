@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 7 Nov 2024, 9:24:25 AM
- *  Last update: 26 Nov 2024, 11:53:14 PM
+ *  Last update: 27 Nov 2024, 12:36:06 AM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { StyleSheet } from "react-native";
@@ -136,5 +136,14 @@ export default StyleSheet.create({
         borderWidth: 1,
         borderColor: "#CCC",
         borderRadius: 5,
+    },
+
+    inputError: {
+        borderColor: "#D00",
+    },
+
+    error: {
+        fontSize: 15,
+        color: "#D00",
     },
 });

@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 3:43:02 PM
- *  Last update: 27 Nov 2024, 12:07:21 AM
+ *  Last update: 27 Nov 2024, 12:38:05 AM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useState, useEffect } from "react";
@@ -38,19 +38,25 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
     const [inEditMode, setInEditMode] = useState<boolean>(false);
 
     const [newTitle, setNewTitle] = useState<string>(event?.title ?? "");
+    const [newTitleHasError, setNewTitleHasError] = useState<boolean>(false);
     const [newLocation, setNewLocation] = useState<string>(event?.location ?? "");
+    const [newLocationHasError, setNewLocationHasError] = useState<boolean>(false);
     const [newStartDateTime, setNewStartDateTime] = useState<Date>(event?.startInstant.toDate() ?? new Date());
     const [newDescription, setNewDescription] = useState<string>(event?.description ?? "");
+    const [newDescriptionHasError, setNewDescriptionHasError] = useState<boolean>(false);
 
     const favorites = useFavorites();
     const dispatch = useAppDispatch();
 
     // refresh data upon receiving a new event param
     useEffect(() => {
-        setNewStartDateTime(event?.startInstant.toDate() ?? new Date());
         setNewTitle(event?.title ?? "");
+        setNewTitleHasError(false);
         setNewLocation(event?.location ?? "");
+        setNewLocationHasError(false);
+        setNewStartDateTime(event?.startInstant.toDate() ?? new Date());
         setNewDescription(event?.description ?? "");
+        setNewDescriptionHasError(false);
     }, [event]);
 
     if (event === undefined) {
@@ -86,6 +92,12 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
         hour: "numeric",
         minute: "2-digit",
     });
+
+    // combined var to determine if anything in edit mode has an error
+    const editHasErrors = 
+        newTitleHasError ||
+        newLocationHasError ||
+        newDescriptionHasError;
     //#endregion
 
     //#region callbacks
@@ -97,6 +109,54 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
             await removeFavorite(event.id, dispatch);
         } else {
             await addFavorite(event.id, dispatch);
+        }
+    };
+
+    /**
+     * onChangeText handler for title editor
+     * @param title new title value
+     */
+    const onChangeTitle = (title: string) => {
+        // always update state
+        setNewTitle(title);
+        
+        // set error if necessary
+        if (title === "") {
+            setNewTitleHasError(true);
+        } else {
+            setNewTitleHasError(false);
+        }
+    };
+
+    /**
+     * onChangeText handler for location editor
+     * @param location new location value
+     */
+    const onChangeLocation = (location: string) => {
+        // always update state
+        setNewLocation(location);
+        
+        // set error if necessary
+        if (location === "") {
+            setNewLocationHasError(true);
+        } else {
+            setNewLocationHasError(false);
+        }
+    };
+
+    /**
+     * onChangeText handler for description editor
+     * @param description new description value
+     */
+    const onChangeDescription = (description: string) => {
+        // always update state
+        setNewDescription(description);
+        
+        // set error if necessary
+        if (description === "") {
+            setNewDescriptionHasError(true);
+        } else {
+            setNewDescriptionHasError(false);
         }
     };
 
@@ -130,9 +190,12 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
 
                     // revert local editor state to current event details
                     setNewTitle(event.title);
+                    setNewTitleHasError(false);
                     setNewLocation(event.location);
+                    setNewLocationHasError(false);
                     setNewStartDateTime(event.startInstant.toDate());
                     setNewDescription(event.description);
+                    setNewDescriptionHasError(false);
                 },
             },
         ]);
@@ -156,20 +219,36 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
     const saveChanges = async () => {
         // if nothing changed, just close edit mode
         if (
-            newTitle === event.title &&
-            newLocation === event.location &&
+            newTitle.trim() === event.title &&
+            newLocation.trim() === event.location &&
             newStartDateTime.valueOf() === event.startInstant.toDate().valueOf() &&
-            newDescription === event.description
+            newDescription.trim() === event.description
         ) {
             setInEditMode(false);
             return;
         }
+
+        // check if any required inputs are missing
+        let errorFound = false;
+        if (newTitle.trim() === "") {
+            setNewTitleHasError(true);
+            errorFound = true;
+        }
+        if (newLocation.trim() === "") {
+            setNewLocationHasError(true);
+            errorFound = true;
+        }
+        if (newDescription.trim() === "") {
+            setNewDescriptionHasError(true);
+            errorFound = true;
+        }
+        if (errorFound) { return; }
         
         const updatedEvent = {...event};
-        updatedEvent.title = newTitle;
-        updatedEvent.location = newLocation;
+        updatedEvent.title = newTitle.trim();
+        updatedEvent.location = newLocation.trim();
         updatedEvent.startInstant = new Timestamp(newStartDateTime.valueOf() / 1000, 0);    // divide by 1000, since Timestamp takes seconds
-        updatedEvent.description = newDescription;
+        updatedEvent.description = newDescription.trim();
         await updateEvent(updatedEvent, dispatch);
 
         eventUpdated(updatedEvent);
@@ -245,11 +324,12 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
     const titleContent =
         inEditMode ? (
             <TextInput
-                style={[styles.title, styles.input]}
+                style={[styles.title, styles.input, newTitleHasError ? styles.inputError : undefined]}
                 value={newTitle}
-                onChangeText={setNewTitle}
+                onChangeText={onChangeTitle}
                 autoCorrect={false}
                 autoCapitalize="none"
+                placeholder="Title"
             />
         ) : (
             <Text style={styles.title}>{event.title}</Text>
@@ -259,11 +339,12 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
     const locationContent =
         inEditMode ? (
             <TextInput
-                style={[styles.location, styles.input]}
+                style={[styles.location, styles.input, newLocationHasError ? styles.inputError : undefined]}
                 value={newLocation}
-                onChangeText={setNewLocation}
+                onChangeText={onChangeLocation}
                 autoCorrect={false}
                 autoCapitalize="none"
+                placeholder="Location"
             />
         ) : (
             <Text style={styles.location}>{event.location}</Text>
@@ -273,12 +354,13 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
     const descriptionContent =
         inEditMode ? (
             <TextInput
-                style={[styles.description, styles.input]}
+                style={[styles.description, styles.input, newDescriptionHasError ? styles.inputError : undefined]}
                 value={newDescription}
-                onChangeText={setNewDescription}
+                onChangeText={onChangeDescription}
                 autoCorrect={false}
                 autoCapitalize="none"
                 multiline
+                placeholder="Description"
             />
         ) : (
             <Text style={styles.description}>{event.description}</Text>
@@ -307,6 +389,11 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
             </View>
 
             {descriptionContent}
+
+            <>
+            {editHasErrors &&
+                <Text style={styles.error}>All fields are required.</Text>}
+            </>
 
             <View style={styles.containerActions}>
                 {leftActionBtn}
