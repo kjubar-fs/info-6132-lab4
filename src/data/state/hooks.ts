@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 11:49:52 PM
- *  Last update: 26 Nov 2024, 10:38:25 AM
+ *  Last update: 26 Nov 2024, 8:48:49 PM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useDispatch, useSelector, useStore } from "react-redux";
@@ -39,9 +39,9 @@ export function useFavorites(): Event[] {
  * @returns sorted event list
  */
 function sortEventList(events: Event[]) {
-    return events.sort((e1, e2) => {
+    return [...events].sort((e1, e2) => {
         // get time diff in chronological order (oldest to newest)
-        let diff = e1.startInstant.toMillis() - e2.startInstant.toMillis();
+        let diff = (e1.startInstant.seconds / 60) - (e2.startInstant.seconds / 60);
 
         // if events are at the same time, sort by title
         if (diff === 0) {
