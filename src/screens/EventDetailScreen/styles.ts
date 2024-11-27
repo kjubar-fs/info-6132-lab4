@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 3:43:02 PM
- *  Last update: 27 Nov 2024, 11:13:44 AM
+ *  Last update: 27 Nov 2024, 11:35:36 AM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { StyleSheet } from "react-native";
@@ -145,5 +145,11 @@ export default StyleSheet.create({
     error: {
         fontSize: 15,
         color: "#D00",
+    },
+
+    deleteText: {
+        fontSize: 16,
+        fontWeight: "500",
+        color: "#F00",
     },
 });

@@ -1,7 +1,7 @@
 /*
  *  Author: Kaleb Jubar
  *  Created: 25 Nov 2024, 3:43:02 PM
- *  Last update: 27 Nov 2024, 11:00:14 AM
+ *  Last update: 27 Nov 2024, 11:49:14 AM
  *  Copyright (c) 2024 Kaleb Jubar
  */
 import { useState, useEffect } from "react";
@@ -11,7 +11,7 @@ import { Alert, Text, TouchableHighlight, TouchableOpacity, View, TextInput } fr
 import { Timestamp } from "firebase/firestore";
 import { auth, Event } from "../../data/firebase/config";
 import { useAppDispatch, useFavorites } from "../../data/state/hooks";
-import { addFavorite, removeFavorite, updateEvent } from "../../data";
+import { addFavorite, removeFavorite, updateEvent, deleteEvent } from "../../data";
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Feather from '@expo/vector-icons/Feather';
@@ -50,6 +50,7 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
 
     // refresh data upon receiving a new event param
     useEffect(() => {
+        setInEditMode(false);
         setNewTitle(event?.title ?? "");
         setNewTitleHasError(false);
         setNewLocation(event?.location ?? "");
@@ -256,6 +257,33 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
         // close edit mode
         setInEditMode(false);
     };
+
+    /**
+     * Delete the event.
+     */
+    const deleteCurrentEvent = () => {
+        // confirm delete via alert
+        Alert.alert("Delete Event", "Are you sure you wish to delete this event? This is NOT reversible.", [
+            {
+                text: "Cancel",
+                style: "cancel",
+                // no onPress, since cancel does nothing
+            },
+            {
+                text: "Delete Event",
+                onPress: async () => {
+                    // delete event
+                    await deleteEvent(event.id, dispatch);
+
+                    // close edit mode (just in case)
+                    setInEditMode(false);
+
+                    // close modal
+                    close();
+                },
+            },
+        ]);
+    };
     //#endregion
 
     //#region state-dependent content
@@ -397,6 +425,18 @@ export function EventDetailScreen({ visible, close, event, eventUpdated }: Props
 
             <View style={styles.containerActions}>
                 {leftActionBtn}
+
+                {inEditMode &&
+                    <TouchableHighlight
+                        style={styles.editBtn}
+                        onPress={deleteCurrentEvent}
+                        underlayColor="#EEE"
+                    >
+                        <>
+                            <Text style={styles.deleteText}>Delete</Text>
+                            <MaterialIcons name="delete" size={24} color="#F00" />
+                        </>
+                    </TouchableHighlight>}
 
                 {canEdit &&
                     <TouchableHighlight
